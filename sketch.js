@@ -23,6 +23,7 @@ function setup() {
   rateSlider = createSlider(0,100,50);
   sizeP = createP();
   boardSizeSlider = createSlider(3,100,24);
+  percolatesP = createP();
 
   // Set up button
   b = document.createElement("button");
