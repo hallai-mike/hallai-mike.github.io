@@ -35,7 +35,7 @@ function setup() {
   // Perform initial generation and draw
   background(0);
   g.update();
-  g.show();
+  //g.show();
 }
 
 

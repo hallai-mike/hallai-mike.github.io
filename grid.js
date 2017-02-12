@@ -13,18 +13,23 @@ function Grid() {
   this.parents;       // array for parents
   this.percolates;    // bool
 
+  this.colors = [[255,0,0], [0,255,0], [0,0,255], [255,255,0], [0,255,255], 
+    [255,0,255], [128,0,0], [128,128,0], [0,128,0], [128,0,128], [0,128,128], 
+    [0,0,128], [220,20,60]];
+  this.numcolors = this.colors.length;
 
   this.show = function() {
     background(255);
-    for(var i=0; i<this.numblocks; i++)
-    {
-      for(var j=0; j<this.numblocks; j++)
-      {
-        (this.values[i*this.numblocks+j]) ? fill(50) : fill(255);
-        rect(i*this.scl, j*this.scl, this.scl, this.scl);
+    for(var i=0; i<this.numblocks; i++) {
+      for(var j=0; j<this.numblocks; j++) {
+        var index = i*this.numblocks+j;
+        (this.values[index]) ? fill(50) : fill(this.fillcolor(index));
+        rect(j*this.scl, i*this.scl, this.scl, this.scl);
       }
     }
     this.updateSliders();
+    // Show result
+    percolatesP.html("Percolates: " + this.percolates);
   }
 
 
@@ -44,11 +49,11 @@ function Grid() {
       this.parents[i] = -1;
     }
 
-    // Show the board.
-    this.show();
-
     // Test for percolation
     this.test();
+
+    // Show the board.
+    this.show();
 
     // Show result
     percolatesP.html("Percolates: " + this.percolates);
@@ -66,6 +71,7 @@ function Grid() {
         // Check the cell above the current cell.
         // If it is a 0, union the two cells.
         var aboveIndex = current-this.numblocks;
+     //   console.log("above " +current+" is "+aboveIndex);
         if (aboveIndex >= 0)
           if (this.values[aboveIndex] == 0)
             this.union(current, aboveIndex);
@@ -74,6 +80,7 @@ function Grid() {
         // If it is a 0, union the two cells.
         if(current%this.numblocks != 0){
           var leftIndex = current-1;
+        //  console.log("left of " +current+" is "+leftIndex);
           if (this.values[leftIndex] == 0)
             this.union(current, leftIndex);
         }
@@ -84,25 +91,49 @@ function Grid() {
     // Checks the parents of the bottom row of cells to see if the parents are
     // in the top row of cells, meaning a cluster spans from the top row to the
     // bottom row, allowing for percolation. 
-    for(var i=0; i<this.numblocks; i++)
-      if(this.values[this.numblocks*(this.numblocks-1)+i]==0)
-        if(this.find((this.numblocks-1)*this.numblocks + i, this.parents)<this.numblocks)
+    for(var i=0; i<this.numblocks; i++){
+      var loc = this.numblocks*(this.numblocks-1)+i;
+      if(this.values[loc]==0)
+        if(this.parents[loc]<this.numblocks)
           this.percolates = true;
+    }
   }
 
 
-  this.union = function() {
-    return 1;
+  this.union = function(a, b) {
+    // Find the roots of a and b.
+    var aroot = this.rootfind(a);
+    var broot = this.rootfind(b);
+
+    // Make the lesser root the parent.
+    if (this.parents[aroot] < this.parents[broot]){
+      this.parents[broot] = aroot;
+    }
+    else {
+      this.parents[aroot] = broot;
+    }
   }
 
 
-  this.find = function() {
-    return 1;
+  this.rootfind = function(rroot) {
+    // Call find recursively on the parent of root.
+    var r = rroot;
+    while(this.parents[r] != r)
+      r = this.parents[r];
+    // return the root
+    return r;
   }
 
 
   this.updateSliders = function() {
     rateP.html("Rate: " + rateSlider.value() + "%");
     sizeP.html("Width: " + boardSizeSlider.value());
+  }
+
+  this.fillcolor = function(cell) {
+    var index = cell;
+    var r = this.rootfind(index);
+    var c = r%this.numcolors;
+    return this.colors[c];
   }
 }
