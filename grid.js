@@ -1,6 +1,6 @@
 // grid.js
 // Grid Class for Percolation Demonstration
-// mch81
+// Mike Hallai
 // 2/10/17
 
 
@@ -18,8 +18,12 @@ function Grid() {
     [0,0,128], [220,20,60]];
   this.numcolors = this.colors.length;
 
+
+  // Shows the board.
   this.show = function() {
     background(255);
+
+    // Color each cell in the grid.
     for(var i=0; i<this.numblocks; i++) {
       for(var j=0; j<this.numblocks; j++) {
         var index = i*this.numblocks+j;
@@ -27,12 +31,16 @@ function Grid() {
         rect(j*this.scl, i*this.scl, this.scl, this.scl);
       }
     }
+
+    // Update the labels for the sliders.
     this.updateSliders();
-    // Show result
+
+    // Show if the grid percolates or not.
     percolatesP.html("Percolates: " + this.percolates);
   }
 
 
+  // Creates a new board based on slider values.
   this.update = function() {
     // Get input values from sliders. 
     this.numblocks = boardSizeSlider.value()
@@ -43,23 +51,21 @@ function Grid() {
     this.percolates = false;
 
     // Fill array with random 1s and 0s according to rate.
-    // Fill parents array with -1
+    // Fill parents array with -1s.
     for(var i=0; i<this.numblocks*this.numblocks; i++) {
       this.values[i] = (random(1)>this.rate);
       this.parents[i] = -1;
     }
 
-    // Test for percolation
+    // Test for percolation.
     this.test();
 
     // Show the board.
     this.show();
-
-    // Show result
-    percolatesP.html("Percolates: " + this.percolates);
   }
 
 
+  // Test the board for percolation.
   this.test = function() {
     for (var current=0; current<this.numblocks*this.numblocks; current++) {
       // if cell is open
@@ -71,7 +77,6 @@ function Grid() {
         // Check the cell above the current cell.
         // If it is a 0, union the two cells.
         var aboveIndex = current-this.numblocks;
-     //   console.log("above " +current+" is "+aboveIndex);
         if (aboveIndex >= 0)
           if (this.values[aboveIndex] == 0)
             this.union(current, aboveIndex);
@@ -80,14 +85,12 @@ function Grid() {
         // If it is a 0, union the two cells.
         if(current%this.numblocks != 0){
           var leftIndex = current-1;
-        //  console.log("left of " +current+" is "+leftIndex);
           if (this.values[leftIndex] == 0)
             this.union(current, leftIndex);
         }
       }
     }
 
-    // Returns true if the board percolates and false if it does not percolate.
     // Checks the parents of the bottom row of cells to see if the parents are
     // in the top row of cells, meaning a cluster spans from the top row to the
     // bottom row, allowing for percolation. 
@@ -100,23 +103,22 @@ function Grid() {
   }
 
 
+  // Merges two clusters.
   this.union = function(a, b) {
     // Find the roots of a and b.
     var aroot = this.rootfind(a);
     var broot = this.rootfind(b);
 
     // Make the lesser root the parent.
-    if (this.parents[aroot] < this.parents[broot]){
+    if (this.parents[aroot] < this.parents[broot])
       this.parents[broot] = aroot;
-    }
-    else {
+    else
       this.parents[aroot] = broot;
-    }
   }
 
 
+  // Find the original root of the cluster.
   this.rootfind = function(rroot) {
-    // Call find recursively on the parent of root.
     var r = rroot;
     while(this.parents[r] != r)
       r = this.parents[r];
@@ -125,11 +127,14 @@ function Grid() {
   }
 
 
+  // Updates labels for the sliders. 
   this.updateSliders = function() {
     rateP.html("Rate: " + rateSlider.value() + "%");
     sizeP.html("Width: " + boardSizeSlider.value());
   }
 
+
+  // Returns a color based on which cluster a cell belongs to. 
   this.fillcolor = function(cell) {
     var index = cell;
     var r = this.rootfind(index);

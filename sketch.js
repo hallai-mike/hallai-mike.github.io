@@ -1,6 +1,6 @@
 // sketch.js
 // Percolation Demonstration
-// mch81
+// Mike Hallai
 // 2/10/17
 
 
@@ -35,7 +35,6 @@ function setup() {
   // Perform initial generation and draw
   background(0);
   g.update();
-  //g.show();
 }
 
 
