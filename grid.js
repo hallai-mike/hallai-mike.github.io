@@ -19,6 +19,18 @@ function Grid() {
   this.numcolors = this.colors.length;
 
 
+  this.setRate = function() {
+    var value = document.getElementById("rateSlider").value;
+    this.rate = value/100;
+    document.getElementById("rateP").innerHTML = "Rate: "+value+"%";
+  }
+
+  this.setWidth = function() {
+    this.numblocks = document.getElementById("widthSlider").value;
+    document.getElementById("widthP").innerHTML = "Size: "+this.numblocks;
+  }
+
+
   // Shows the board.
   this.show = function() {
     background(0);
@@ -32,20 +44,14 @@ function Grid() {
       }
     }
 
-    // Update the labels for the sliders.
-    this.updateSliders();
-
     // Show if the grid percolates or not.
     percolatesP.html("Percolates: " + this.percolates);
   }
 
 
   // Creates a new board based on slider values.
-  this.update = function() {
-    // Get input values from sliders. 
-    this.numblocks = boardSizeSlider.value()
-    this.rate = (rateSlider.value()/100.0);
-    //this.scl = floor((boardsize-2)/this.numblocks);
+  this.update = function(rate) {
+    // Set up the board scale. 
     this.scl = (boardsize-2)/this.numblocks;
     this.values = [this.numblocks*this.numblocks];
     this.parents = [this.numblocks*this.numblocks];
@@ -125,13 +131,6 @@ function Grid() {
       r = this.parents[r];
     // return the root
     return r;
-  }
-
-
-  // Updates labels for the sliders. 
-  this.updateSliders = function() {
-    rateP.html("Rate: " + rateSlider.value() + "%");
-    sizeP.html("Width: " + boardSizeSlider.value());
   }
 
 

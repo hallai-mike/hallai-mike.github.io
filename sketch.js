@@ -15,22 +15,14 @@ var b;                  // 'generate' button
 function setup() {
   // Create canvas, create grid object
   createCanvas(boardsize, boardsize);
-  frameRate(20);
   g = new Grid();
-
-  // Show statistics below grid
-  rateP = createP();
-  rateSlider = createSlider(0,100,50);
-  rateSlider.onchange = "g.update()";
-
-  sizeP = createP();
-  boardSizeSlider = createSlider(3,100,24);
   percolatesP = createP();
 
   
 
-  // Perform initial generation and draw
-  //background(0);
+  // Perform initial board generation and show board.
+  g.setRate();
+  g.setWidth();
   g.update();
 
   // Set up button
@@ -42,6 +34,6 @@ function setup() {
 
 
 function draw() {
-  // Update text value on sliders
-  g.updateSliders();
+  // Does not loop.
+  noLoop();
 }
