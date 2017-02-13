@@ -21,7 +21,7 @@ function Grid() {
 
   // Shows the board.
   this.show = function() {
-    background(255);
+    background(0);
 
     // Color each cell in the grid.
     for(var i=0; i<this.numblocks; i++) {
@@ -45,7 +45,8 @@ function Grid() {
     // Get input values from sliders. 
     this.numblocks = boardSizeSlider.value()
     this.rate = (rateSlider.value()/100.0);
-    this.scl = floor((boardsize-2)/this.numblocks);
+    //this.scl = floor((boardsize-2)/this.numblocks);
+    this.scl = (boardsize-2)/this.numblocks;
     this.values = [this.numblocks*this.numblocks];
     this.parents = [this.numblocks*this.numblocks];
     this.percolates = false;

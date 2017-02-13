@@ -21,20 +21,23 @@ function setup() {
   // Show statistics below grid
   rateP = createP();
   rateSlider = createSlider(0,100,50);
+  rateSlider.onchange = "g.update()";
+
   sizeP = createP();
   boardSizeSlider = createSlider(3,100,24);
   percolatesP = createP();
 
+  
+
+  // Perform initial generation and draw
+  //background(0);
+  g.update();
+
   // Set up button
   b = document.createElement("button");
   b.innerHTML = "Generate";
-  var body = document.getElementsByTagName("body")[0];
-  body.appendChild(b);
+  document.getElementById("form").appendChild(b);
   b.addEventListener ("click", function() {g.update();});
-
-  // Perform initial generation and draw
-  background(0);
-  g.update();
 }
 
 
