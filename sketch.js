@@ -18,8 +18,6 @@ function setup() {
   g = new Grid();
   percolatesP = createP();
 
-  
-
   // Perform initial board generation and show board.
   g.setRate();
   g.setWidth();
